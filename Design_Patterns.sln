@@ -9,6 +9,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DesignPatterns.ChainOfRespo
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CQRS_DP", "CQRS_DP", "{41FE021B-B1B8-4FCE-BE0D-D7AB972F2CAC}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DesignPatterns.CQRS", "CQRS_DP\DesignPatterns.CQRS\DesignPatterns.CQRS.csproj", "{63626DED-BBCC-4D3A-92EC-64E39BAF6EF5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -19,12 +21,17 @@ Global
 		{96834E1B-40AF-4CB6-B723-B24BCB6ACCBF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{96834E1B-40AF-4CB6-B723-B24BCB6ACCBF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{96834E1B-40AF-4CB6-B723-B24BCB6ACCBF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{63626DED-BBCC-4D3A-92EC-64E39BAF6EF5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{63626DED-BBCC-4D3A-92EC-64E39BAF6EF5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{63626DED-BBCC-4D3A-92EC-64E39BAF6EF5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{63626DED-BBCC-4D3A-92EC-64E39BAF6EF5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{96834E1B-40AF-4CB6-B723-B24BCB6ACCBF} = {CB0E411D-ED2F-4570-9D5C-8906451C6102}
+		{63626DED-BBCC-4D3A-92EC-64E39BAF6EF5} = {41FE021B-B1B8-4FCE-BE0D-D7AB972F2CAC}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {034FF146-2ABD-49FC-BC1F-5E5CCD784265}
