@@ -20,7 +20,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="CQRSDesignPattern\Commands\" />
     <Folder Include="CQRSDesignPattern\Quaries\" />
   </ItemGroup>
 

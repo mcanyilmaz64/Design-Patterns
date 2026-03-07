@@ -1,0 +1,501 @@
+﻿@model List<DesignPatterns.CQRS.CQRSDesignPattern.Results.GetProductQueryResult>
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RETRO MARKET - Product Catalog</title>
+
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Courier+Prime:wght@400;700&family=Special+Elite&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --vintage-cream: #f4e8d0;
+            --vintage-brown: #8b5a3c;
+            --vintage-orange: #d97142;
+            --vintage-teal: #5a9a8e;
+            --vintage-navy: #2c4251;
+            --vintage-red: #c84843;
+            --paper-texture: #faf5eb;
+        }
+
+        body {
+            font-family: 'Courier Prime', monospace;
+            background: var(--paper-texture);
+            color: var(--vintage-navy);
+            position: relative;
+            overflow-x: hidden;
+        }
+
+            /* Paper Texture Overlay */
+            body::before {
+                content: '';
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background-image: repeating-linear-gradient(0deg, rgba(0,0,0,.03) 0px, transparent 1px, transparent 2px, rgba(0,0,0,.03) 3px), repeating-linear-gradient(90deg, rgba(0,0,0,.03) 0px, transparent 1px, transparent 2px, rgba(0,0,0,.03) 3px);
+                pointer-events: none;
+                z-index: 9999;
+            }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            position: relative;
+        }
+
+        /* Retro Header */
+        .retro-header {
+            text-align: center;
+            margin-bottom: 60px;
+            position: relative;
+            padding: 40px 20px;
+            background: linear-gradient(180deg, var(--vintage-orange) 0%, var(--vintage-red) 100%);
+            border: 8px solid var(--vintage-navy);
+            box-shadow: inset 0 0 0 4px var(--vintage-cream), 12px 12px 0 rgba(0,0,0,0.2);
+        }
+
+            .retro-header::before {
+                content: '';
+                position: absolute;
+                top: -4px;
+                left: -4px;
+                right: -4px;
+                bottom: -4px;
+                border: 2px dashed var(--vintage-cream);
+                pointer-events: none;
+            }
+
+        .retro-title {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 5rem;
+            color: var(--vintage-cream);
+            text-shadow: 4px 4px 0 var(--vintage-navy), 8px 8px 0 rgba(0,0,0,0.3);
+            letter-spacing: 8px;
+            margin-bottom: 10px;
+            transform: scaleY(1.2);
+        }
+
+        .retro-subtitle {
+            font-family: 'Special Elite', cursive;
+            font-size: 1.4rem;
+            color: var(--vintage-cream);
+            letter-spacing: 4px;
+            text-transform: uppercase;
+        }
+
+        /* Action Bar */
+        .action-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+            padding: 20px;
+            background: var(--vintage-teal);
+            border: 4px solid var(--vintage-navy);
+            box-shadow: 6px 6px 0 rgba(0,0,0,0.2);
+        }
+
+        .badge-group {
+            display: flex;
+            gap: 15px;
+        }
+
+        .vintage-badge {
+            background: var(--vintage-cream);
+            border: 3px solid var(--vintage-navy);
+            padding: 12px 20px;
+            position: relative;
+            box-shadow: 4px 4px 0 rgba(0,0,0,0.2);
+        }
+
+            .vintage-badge::before {
+                content: '';
+                position: absolute;
+                top: -2px;
+                left: -2px;
+                right: -2px;
+                bottom: -2px;
+                border: 1px dashed var(--vintage-orange);
+            }
+
+        .badge-label {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--vintage-brown);
+            font-weight: 700;
+        }
+
+        .badge-value {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.8rem;
+            color: var(--vintage-navy);
+            letter-spacing: 2px;
+        }
+
+        /* Add Button */
+        .btn-add {
+            background: var(--vintage-red);
+            color: var(--vintage-cream);
+            border: 4px solid var(--vintage-navy);
+            padding: 15px 40px;
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.5rem;
+            letter-spacing: 3px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            box-shadow: 6px 6px 0 rgba(0,0,0,0.3);
+            transition: all 0.2s ease;
+            position: relative;
+        }
+
+            .btn-add:hover {
+                transform: translate(3px, 3px);
+                box-shadow: 3px 3px 0 rgba(0,0,0,0.3);
+            }
+
+            .btn-add::before {
+                content: '★';
+                margin-right: 8px;
+            }
+
+        /* Product Grid */
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        /* Product Card - Vintage Poster Style */
+        .product-card {
+            background: var(--vintage-cream);
+            border: 6px solid var(--vintage-navy);
+            padding: 0;
+            position: relative;
+            box-shadow: 8px 8px 0 rgba(0,0,0,0.2);
+            transition: all 0.3s ease;
+            overflow: hidden;
+        }
+
+            .product-card:hover {
+                transform: rotate(-1deg) scale(1.02);
+                box-shadow: 12px 12px 0 rgba(0,0,0,0.3);
+            }
+
+        /* Card Header - Poster Style */
+        .card-header {
+            background: linear-gradient(135deg, var(--vintage-orange), var(--vintage-red));
+            padding: 25px 20px;
+            text-align: center;
+            position: relative;
+            border-bottom: 4px solid var(--vintage-navy);
+        }
+
+            .card-header::before {
+                content: '◆';
+                position: absolute;
+                top: 10px;
+                left: 20px;
+                font-size: 1.5rem;
+                color: var(--vintage-cream);
+            }
+
+            .card-header::after {
+                content: '◆';
+                position: absolute;
+                top: 10px;
+                right: 20px;
+                font-size: 1.5rem;
+                color: var(--vintage-cream);
+            }
+
+        .product-id {
+            font-family: 'Special Elite', cursive;
+            font-size: 0.9rem;
+            color: var(--vintage-cream);
+            letter-spacing: 2px;
+        }
+
+        .product-name {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 2.2rem;
+            color: var(--vintage-cream);
+            letter-spacing: 3px;
+            margin-top: 5px;
+            text-shadow: 3px 3px 0 rgba(0,0,0,0.3);
+            line-height: 1;
+        }
+
+        /* Card Body */
+        .card-body {
+            padding: 25px 20px;
+            background: var(--vintage-cream);
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding: 12px;
+            background: white;
+            border: 2px dashed var(--vintage-brown);
+        }
+
+        .info-label {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--vintage-brown);
+            font-weight: 700;
+        }
+
+        .info-value {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.6rem;
+            color: var(--vintage-navy);
+            letter-spacing: 1px;
+        }
+
+        .price-tag {
+            background: var(--vintage-red);
+            color: var(--vintage-cream);
+            padding: 8px 16px;
+            border: 3px solid var(--vintage-navy);
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 2rem;
+            letter-spacing: 2px;
+            box-shadow: 3px 3px 0 rgba(0,0,0,0.2);
+        }
+
+        .stock-badge {
+            background: var(--vintage-teal);
+            color: white;
+            padding: 6px 14px;
+            border: 2px solid var(--vintage-navy);
+            font-weight: 700;
+        }
+
+            .stock-badge.low {
+                background: var(--vintage-red);
+            }
+
+        /* Card Footer */
+        .card-footer {
+            padding: 15px;
+            background: var(--vintage-navy);
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 12px;
+            border: 3px solid var(--vintage-cream);
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.1rem;
+            letter-spacing: 2px;
+            cursor: pointer;
+            text-decoration: none;
+            text-align: center;
+            transition: all 0.2s ease;
+            color: var(--vintage-cream);
+        }
+
+        .btn-edit {
+            background: var(--vintage-teal);
+        }
+
+        .btn-delete {
+            background: var(--vintage-red);
+        }
+
+        .btn:hover {
+            transform: scale(1.05);
+            border-color: white;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 100px 40px;
+            background: var(--vintage-cream);
+            border: 8px solid var(--vintage-navy);
+            box-shadow: 12px 12px 0 rgba(0,0,0,0.2);
+        }
+
+            .empty-state h2 {
+                font-family: 'Bebas Neue', sans-serif;
+                font-size: 3rem;
+                color: var(--vintage-navy);
+                letter-spacing: 4px;
+                margin-bottom: 20px;
+            }
+
+        .empty-icon {
+            font-size: 6rem;
+            margin-bottom: 30px;
+            opacity: 0.3;
+        }
+
+        /* Decorative Elements */
+        .corner-decoration {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            border: 4px solid var(--vintage-navy);
+        }
+
+            .corner-decoration.tl {
+                top: -4px;
+                left: -4px;
+                border-right: none;
+                border-bottom: none;
+            }
+
+            .corner-decoration.tr {
+                top: -4px;
+                right: -4px;
+                border-left: none;
+                border-bottom: none;
+            }
+
+            .corner-decoration.bl {
+                bottom: -4px;
+                left: -4px;
+                border-right: none;
+                border-top: none;
+            }
+
+            .corner-decoration.br {
+                bottom: -4px;
+                right: -4px;
+                border-left: none;
+                border-top: none;
+            }
+
+        /* Responsive */
+        @@media (max-width: 768px) {
+            .retro-title {
+                font-size: 3rem;
+            }
+
+            .product-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .action-bar {
+                flex-direction: column;
+                gap: 20px;
+            }
+
+            .badge-group {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Retro Header -->
+        <div class="retro-header">
+            <h1 class="retro-title">RETRO MARKET</h1>
+            <p class="retro-subtitle">★ Product Catalog 1985 ★</p>
+        </div>
+
+        <!-- Action Bar -->
+        <div class="action-bar">
+            <div class="badge-group">
+                <div class="vintage-badge">
+                    <div class="badge-label">Items</div>
+                    <div class="badge-value">@(Model?.Count ?? 0)</div>
+                </div>
+                <div class="vintage-badge">
+                    <div class="badge-label">Value</div>
+                    <div class="badge-value">$@(Model?.Sum(x => x.Price) ?? 0)</div>
+                </div>
+                <div class="vintage-badge">
+                    <div class="badge-label">Stock</div>
+                    <div class="badge-value">@(Model?.Sum(x => x.Stock) ?? 0)</div>
+                </div>
+            </div>
+
+            <a href="/Default/AddProduct/" class="btn-add">
+                New Product
+            </a>
+        </div>
+
+        <!-- Product Grid -->
+        @if (Model != null && Model.Any())
+        {
+            <div class="product-grid">
+                @foreach (var item in Model)
+                {
+                    <div class="product-card">
+                        <div class="corner-decoration tl"></div>
+                        <div class="corner-decoration tr"></div>
+                        <div class="corner-decoration bl"></div>
+                        <div class="corner-decoration br"></div>
+
+                        <div class="card-header">
+                            <div class="product-id">NO. @item.Id</div>
+                            <div class="product-name">@item.ProductName</div>
+                        </div>
+
+                        <div class="card-body">
+                            <div class="info-row">
+                                <span class="info-label">Price</span>
+                                <span class="price-tag">$@item.Price</span>
+                            </div>
+                            <div class="info-row">
+                                <span class="info-label">Stock</span>
+                                <span class="stock-badge @(item.Stock < 20 ? "low" : "")">
+                                    @item.Stock units
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="card-footer">
+                            <a href="/Default/UpdateProduct/@item.Id" class="btn btn-edit">
+                                ✎ Edit
+                            </a>
+                            <a href="/Default/DeleteProduct/@item.Id"
+                               class="btn btn-delete"
+                               onclick="return confirm('Delete this product?')">
+                                ✕ Delete
+                            </a>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+        else
+        {
+            <div class="empty-state">
+                <div class="empty-icon">📦</div>
+                <h2>No Products in Catalog</h2>
+                <p style="font-size: 1.2rem; color: #8b5a3c; margin-top: 15px;">Click "New Product" to add your first item!</p>
+            </div>
+        }
+    </div>
+</body>
+</html>

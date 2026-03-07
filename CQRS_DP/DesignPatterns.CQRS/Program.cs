@@ -1,7 +1,15 @@
+using DesignPatterns.CQRS.CQRSDesignPattern.Handlers;
+using DesignPatterns.CQRS.DAL;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+builder.Services.AddDbContext<Context>();
+builder.Services.AddScoped<GetProductQueryHandler>();
+builder.Services.AddScoped<CreateProductCommandHandler>();
+
 
 var app = builder.Build();
 
