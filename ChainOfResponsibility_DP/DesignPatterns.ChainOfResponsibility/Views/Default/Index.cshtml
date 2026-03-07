@@ -1,0 +1,636 @@
+﻿@model CustomerProcessViewModel
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"]</title>
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #0a4d8f;
+            --secondary: #00d9ff;
+            --accent: #ff6b35;
+            --success: #00ff88;
+            --error: #ff3366;
+            --dark: #0a0e27;
+            --light: #f8f9fa;
+            --gradient-1: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --gradient-2: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            --gradient-3: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 100%);
+            min-height: 100vh;
+            color: white;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Animated background */
+        body::before {
+            content: '';
+            position: fixed;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(102, 126, 234, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(0, 217, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 40% 20%, rgba(255, 107, 53, 0.05) 0%, transparent 50%);
+            animation: drift 20s ease-in-out infinite;
+            z-index: 0;
+        }
+
+        @@keyframes drift {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            33% { transform: translate(30px, -30px) rotate(5deg); }
+            66% { transform: translate(-20px, 20px) rotate(-5deg); }
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 60px;
+            animation: fadeInDown 0.8s ease-out;
+        }
+
+        .logo {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 3rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--secondary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+            letter-spacing: 2px;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: rgba(255, 255, 255, 0.6);
+            font-weight: 300;
+        }
+
+        /* Main Grid */
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        @@media (max-width: 1024px) {
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Card Base */
+        .card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        .card-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.5rem;
+            margin-bottom: 25px;
+            color: var(--secondary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Withdrawal Form */
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            color: rgba(255, 255, 255, 0.8);
+            font-weight: 500;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 15px 20px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            color: white;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            outline: none;
+        }
+
+        .form-input:focus {
+            border-color: var(--secondary);
+            background: rgba(255, 255, 255, 0.12);
+            box-shadow: 0 0 20px rgba(0, 217, 255, 0.3);
+        }
+
+        .amount-input {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2rem;
+            font-weight: 700;
+            text-align: center;
+            letter-spacing: 2px;
+        }
+
+        .currency-symbol {
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1.5rem;
+            color: var(--secondary);
+            pointer-events: none;
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        /* Submit Button */
+        .submit-btn {
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(135deg, var(--secondary), var(--accent));
+            border: none;
+            border-radius: 12px;
+            color: white;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .submit-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(0, 217, 255, 0.4);
+        }
+
+        .submit-btn:hover::before {
+            left: 100%;
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+
+        /* Approval Chain */
+        .approval-chain {
+            display: grid;
+            gap: 15px;
+        }
+
+        .approver {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .approver::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--gradient-3);
+            transform: scaleY(0);
+            transition: transform 0.3s ease;
+        }
+
+        .approver:hover::before {
+            transform: scaleY(1);
+        }
+
+        .approver-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: var(--gradient-1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            flex-shrink: 0;
+            position: relative;
+        }
+
+        .approver-icon::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @@keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.1); opacity: 0.5; }
+        }
+
+        .approver-info {
+            flex: 1;
+        }
+
+        .approver-name {
+            font-weight: 600;
+            font-size: 1rem;
+            margin-bottom: 5px;
+        }
+
+        .approver-limit {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.85rem;
+        }
+
+        .limit-badge {
+            background: rgba(0, 217, 255, 0.2);
+            color: var(--secondary);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            display: inline-block;
+            margin-top: 5px;
+        }
+
+        /* Info Cards */
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .info-card {
+            background: rgba(255, 255, 255, 0.03);
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: center;
+        }
+
+        .info-value {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--secondary);
+            margin-bottom: 5px;
+        }
+
+        .info-label {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Animations */
+        @@keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @@keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @@keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        /* Success/Error Messages */
+        .alert {
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            animation: slideInRight 0.5s ease-out;
+            border-left: 4px solid;
+        }
+
+        .alert-success {
+            background: rgba(0, 255, 136, 0.1);
+            border-color: var(--success);
+            color: var(--success);
+        }
+
+        .alert-error {
+            background: rgba(255, 51, 102, 0.1);
+            border-color: var(--error);
+            color: var(--error);
+        }
+
+        /* Loading Animation */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: var(--secondary);
+            animation: spin 1s linear infinite;
+        }
+
+        @@keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Responsive */
+        @@media (max-width: 768px) {
+            .logo {
+                font-size: 2rem;
+            }
+
+            .amount-input {
+                font-size: 1.5rem;
+            }
+
+            .approver-icon {
+                width: 50px;
+                height: 50px;
+                font-size: 1.2rem;
+            }
+        }
+
+        /* Quick Amount Buttons */
+        .quick-amounts {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .quick-btn {
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .quick-btn:hover {
+            background: rgba(0, 217, 255, 0.2);
+            border-color: var(--secondary);
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="logo">🏦 CHAINBANK</div>
+            <div class="subtitle">Chain of Responsibility Para Çekme Simülasyonu</div>
+        </div>
+
+        <!-- Main Grid -->
+        <div class="main-grid">
+            <!-- Withdrawal Form -->
+            <div class="card">
+                <h2 class="card-title">
+                    💰 Para Çekme İşlemi
+                </h2>
+
+                <form method="post" asp-action="Index" id="withdrawalForm">
+                    <div class="form-group">
+                        <label class="form-label" for="customerName">Müşteri Adı</label>
+                        <input 
+                            type="text" 
+                            class="form-input" 
+                            id="customerName"
+                            asp-for="Name"
+                            placeholder="Ad Soyad" 
+                            required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="amount">Çekilecek Tutar (TL)</label>
+                        <div class="input-wrapper">
+                            <input 
+                                type="number" 
+                                class="form-input amount-input" 
+                                id="amount"
+                                asp-for="Amount"
+                                placeholder="0" 
+                                min="0"
+                                step="1000"
+                                required>
+                            <span class="currency-symbol">₺</span>
+                        </div>
+                    </div>
+
+                    <div class="quick-amounts">
+                        <button type="button" class="quick-btn" onclick="setAmount(50000)">50K</button>
+                        <button type="button" class="quick-btn" onclick="setAmount(150000)">150K</button>
+                        <button type="button" class="quick-btn" onclick="setAmount(250000)">250K</button>
+                        <button type="button" class="quick-btn" onclick="setAmount(350000)">350K</button>
+                    </div>
+
+                    <div class="form-group" style="margin-top: 30px;">
+                        <button type="submit" class="submit-btn">
+                            🚀 İşlemi Başlat
+                        </button>
+                    </div>
+                </form>
+
+                <!-- Info Cards -->
+                <div class="info-grid">
+                    <div class="info-card">
+                        <div class="info-value">4</div>
+                        <div class="info-label">Yetki Seviyesi</div>
+                    </div>
+                    <div class="info-card">
+                        <div class="info-value">400K</div>
+                        <div class="info-label">Max Limit</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Approval Chain -->
+            <div class="card">
+                <h2 class="card-title">
+                    🔗 Onay Zinciri
+                </h2>
+
+                <div class="approval-chain">
+                    <div class="approver">
+                        <div class="approver-icon">👔</div>
+                        <div class="approver-info">
+                            <div class="approver-name">Veznedar</div>
+                            <div class="approver-limit">Günlük işlem limiti</div>
+                            <span class="limit-badge">⬆️ 100.000 TL</span>
+                        </div>
+                    </div>
+
+                    <div class="approver">
+                        <div class="approver-icon" style="background: var(--gradient-2);">👨‍💼</div>
+                        <div class="approver-info">
+                            <div class="approver-name">Müdür Yardımcısı</div>
+                            <div class="approver-limit">Günlük işlem limiti</div>
+                            <span class="limit-badge">⬆️ 150.000 TL</span>
+                        </div>
+                    </div>
+
+                    <div class="approver">
+                        <div class="approver-icon" style="background: var(--gradient-3);">🎯</div>
+                        <div class="approver-info">
+                            <div class="approver-name">Şube Müdürü</div>
+                            <div class="approver-limit">Günlük işlem limiti</div>
+                            <span class="limit-badge">⬆️ 250.000 TL</span>
+                        </div>
+                    </div>
+
+                    <div class="approver">
+                        <div class="approver-icon" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">⭐</div>
+                        <div class="approver-info">
+                            <div class="approver-name">Bölge Müdürü</div>
+                            <div class="approver-limit">Günlük işlem limiti</div>
+                            <span class="limit-badge">⬆️ 400.000 TL</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Process History (if available) -->
+        @if (Model != null && !string.IsNullOrEmpty(Model.Description))
+        {
+            <div class="card">
+                <h2 class="card-title">
+                    📋 İşlem Sonucu
+                </h2>
+                
+                <div class="@(Model.Description.Contains("Onaylandı") ? "alert alert-success" : "alert alert-error")">
+                    <strong>@Model.EmployeeName</strong>
+                    <p style="margin-top: 10px;">@Model.Description</p>
+                    <p style="margin-top: 5px; opacity: 0.8;">Müşteri: @Model.Name | Tutar: @Model.Amount TL</p>
+                </div>
+            </div>
+        }
+    </div>
+
+    <script>
+        function setAmount(amount) {
+            document.getElementById('amount').value = amount;
+            
+            // Add visual feedback
+            const input = document.getElementById('amount');
+            input.style.transform = 'scale(1.05)';
+            setTimeout(() => {
+                input.style.transform = 'scale(1)';
+            }, 200);
+        }
+
+        // Form submission animation
+        document.getElementById('withdrawalForm').addEventListener('submit', function(e) {
+            const btn = this.querySelector('.submit-btn');
+            btn.innerHTML = '<span class="loading"></span> İşleniyor...';
+            btn.style.opacity = '0.7';
+        });
+
+        // Auto-format amount input
+        document.getElementById('amount').addEventListener('input', function(e) {
+            // Remove non-numeric characters except for decimal point
+            let value = this.value.replace(/[^\d]/g, '');
+            this.value = value;
+        });
+
+        // Add staggered animation to approval chain
+        document.addEventListener('DOMContentLoaded', function() {
+            const approvers = document.querySelectorAll('.approver');
+            approvers.forEach((approver, index) => {
+                approver.style.animation = `fadeInUp 0.5s ease-out ${index * 0.1}s backwards`;
+            });
+        });
+    </script>
+</body>
+</html>

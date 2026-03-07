@@ -1,0 +1,32 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.10.35122.118
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ChainOfResponsibility_DP", "ChainOfResponsibility_DP", "{CB0E411D-ED2F-4570-9D5C-8906451C6102}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DesignPatterns.ChainOfResponsibility", "ChainOfResponsibility_DP\DesignPatterns.ChainOfResponsibility\DesignPatterns.ChainOfResponsibility.csproj", "{96834E1B-40AF-4CB6-B723-B24BCB6ACCBF}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CQRS_DP", "CQRS_DP", "{41FE021B-B1B8-4FCE-BE0D-D7AB972F2CAC}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{96834E1B-40AF-4CB6-B723-B24BCB6ACCBF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{96834E1B-40AF-4CB6-B723-B24BCB6ACCBF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{96834E1B-40AF-4CB6-B723-B24BCB6ACCBF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{96834E1B-40AF-4CB6-B723-B24BCB6ACCBF}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{96834E1B-40AF-4CB6-B723-B24BCB6ACCBF} = {CB0E411D-ED2F-4570-9D5C-8906451C6102}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {034FF146-2ABD-49FC-BC1F-5E5CCD784265}
+	EndGlobalSection
+EndGlobal
