@@ -1,26 +1,382 @@
 ﻿@{
     Layout = null;
 }
-
 <!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Netflix - Plan Seçimi</title>
+    <link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <style>
+        @@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Netflix+Sans:wght@400;500;700&display=swap');
 
-<a href="~/lib/bootstrap/dist/css/bootstrap.css.map">~/lib/bootstrap/dist/css/bootstrap.css.map</a>
-<a href="~/lib/bootstrap/dist/css/bootstrap.min.css.map">~/lib/bootstrap/dist/css/bootstrap.min.css.map</a>
-<a href="~/lib/bootstrap/dist/css/bootstrap.rtl.css.map">~/lib/bootstrap/dist/css/bootstrap.rtl.css.map</a>
-<a href="~/lib/bootstrap/dist/css/bootstrap.rtl.min.css.map">~/lib/bootstrap/dist/css/bootstrap.rtl.min.css.map</a>
-<link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
-<link href="~/lib/bootstrap/dist/css/bootstrap.rtl.min.css" rel="stylesheet" />
-<link href="~/lib/bootstrap/dist/css/bootstrap.rtl.css" rel="stylesheet" />
-<link href="~/lib/bootstrap/dist/css/bootstrap.css" rel="stylesheet" />
+        :root {
+            --netflix-red: #E50914;
+            --netflix-dark: #141414;
+            --netflix-card: #1f1f1f;
+            --netflix-border: #2a2a2a;
+            --netflix-text: #e5e5e5;
+            --netflix-muted: #a3a3a3;
+        }
 
-<div class="container">
-    <h3>Plan Adı: @ViewBag.v1</h3>
-    <h3>Kişi Sayısı : @ViewBag.v2</h3>
-    <h3>Fiyat : @ViewBag.v3</h3>
-    <h3>Çözünürlük : @ViewBag.v4</h3>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--netflix-dark);
+            color: var(--netflix-text);
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+            /* Background cinematic effect */
+            body::before {
+                content: '';
+                position: fixed;
+                inset: 0;
+                background: radial-gradient(ellipse at 20% 50%, rgba(229, 9, 20, 0.07) 0%, transparent 60%), radial-gradient(ellipse at 80% 20%, rgba(229, 9, 20, 0.05) 0%, transparent 50%);
+                pointer-events: none;
+                z-index: 0;
+            }
+
+        /* NAV */
+        .nf-nav {
+            position: relative;
+            z-index: 10;
+            padding: 20px 48px;
+            display: flex;
+            align-items: center;
+            border-bottom: 1px solid var(--netflix-border);
+            background: linear-gradient(180deg, rgba(20,20,20,0.95) 0%, transparent 100%);
+        }
+
+        .nf-logo {
+            font-size: 32px;
+            font-weight: 900;
+            color: var(--netflix-red);
+            letter-spacing: -1px;
+            text-transform: uppercase;
+            font-style: italic;
+        }
+
+        /* MAIN */
+        .nf-main {
+            position: relative;
+            z-index: 1;
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 60px 24px;
+        }
+
+        .plan-wrapper {
+            width: 100%;
+            max-width: 560px;
+            animation: fadeUp 0.5s ease forwards;
+        }
+
+        @@keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(24px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* PLAN BADGE */
+        .plan-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(229, 9, 20, 0.12);
+            border: 1px solid rgba(229, 9, 20, 0.35);
+            color: var(--netflix-red);
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            padding: 6px 16px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+        }
+
+            .plan-badge::before {
+                content: '';
+                width: 7px;
+                height: 7px;
+                border-radius: 50%;
+                background: var(--netflix-red);
+                animation: pulse 1.8s ease infinite;
+            }
+
+        @@keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+
+            50% {
+                opacity: 0.4;
+                transform: scale(0.8);
+            }
+        }
+
+        /* PLAN TITLE */
+        .plan-title {
+            font-size: 42px;
+            font-weight: 700;
+            color: #fff;
+            line-height: 1.1;
+            margin-bottom: 8px;
+            letter-spacing: -0.5px;
+        }
+
+            .plan-title span {
+                color: var(--netflix-red);
+            }
+
+        .plan-subtitle {
+            font-size: 15px;
+            color: var(--netflix-muted);
+            margin-bottom: 36px;
+        }
+
+        /* CARD */
+        .plan-card {
+            background: var(--netflix-card);
+            border: 1px solid var(--netflix-border);
+            border-radius: 8px;
+            overflow: hidden;
+            margin-bottom: 28px;
+            box-shadow: 0 8px 40px rgba(0,0,0,0.6);
+        }
+
+        .plan-card-header {
+            background: linear-gradient(135deg, #1a1a1a, #222);
+            padding: 20px 28px;
+            border-bottom: 1px solid var(--netflix-border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+            .plan-card-header .label {
+                font-size: 11px;
+                color: var(--netflix-muted);
+                letter-spacing: 2px;
+                text-transform: uppercase;
+                font-weight: 600;
+            }
+
+            .plan-card-header .value {
+                font-size: 22px;
+                font-weight: 700;
+                color: #fff;
+                margin-top: 4px;
+            }
+
+        .plan-price-tag {
+            text-align: right;
+        }
+
+            .plan-price-tag .amount {
+                font-size: 30px;
+                font-weight: 800;
+                color: var(--netflix-red);
+            }
+
+            .plan-price-tag .period {
+                font-size: 12px;
+                color: var(--netflix-muted);
+            }
+
+        /* DETAILS LIST */
+        .plan-details {
+            padding: 8px 0;
+        }
+
+        .detail-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 28px;
+            border-bottom: 1px solid rgba(255,255,255,0.04);
+            transition: background 0.2s;
+        }
+
+            .detail-row:last-child {
+                border-bottom: none;
+            }
+
+            .detail-row:hover {
+                background: rgba(255,255,255,0.03);
+            }
+
+        .detail-label {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 14px;
+            color: var(--netflix-muted);
+            font-weight: 500;
+        }
+
+        .detail-icon {
+            width: 34px;
+            height: 34px;
+            border-radius: 6px;
+            background: rgba(229, 9, 20, 0.1);
+            border: 1px solid rgba(229, 9, 20, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 15px;
+            flex-shrink: 0;
+        }
+
+        .detail-value {
+            font-size: 15px;
+            font-weight: 600;
+            color: #fff;
+        }
+
+        /* BUTTONS */
+        .plan-actions {
+            display: flex;
+            gap: 12px;
+        }
+
+        .btn-nf-primary {
+            flex: 1;
+            padding: 14px 24px;
+            background: var(--netflix-red);
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            text-decoration: none;
+            text-align: center;
+            display: inline-block;
+            transition: background 0.2s, transform 0.15s;
+            letter-spacing: 0.3px;
+        }
+
+            .btn-nf-primary:hover {
+                background: #f40612;
+                transform: translateY(-1px);
+                color: #fff;
+                text-decoration: none;
+            }
+
+        .btn-nf-secondary {
+            flex: 1;
+            padding: 14px 24px;
+            background: transparent;
+            color: var(--netflix-text);
+            border: 1px solid rgba(255,255,255,0.25);
+            border-radius: 5px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            text-align: center;
+            display: inline-block;
+            transition: border-color 0.2s, background 0.2s, transform 0.15s;
+        }
+
+            .btn-nf-secondary:hover {
+                border-color: rgba(255,255,255,0.6);
+                background: rgba(255,255,255,0.06);
+                color: #fff;
+                transform: translateY(-1px);
+                text-decoration: none;
+            }
+
+        /* FOOTER */
+        .nf-footer {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            padding: 24px;
+            font-size: 12px;
+            color: #555;
+            border-top: 1px solid var(--netflix-border);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- NAV -->
+    <nav class="nf-nav">
+        <div class="nf-logo">MCY DP SERIES</div>
+    </nav>
+
+    <!-- MAIN -->
+    <main class="nf-main">
+        <div class="plan-wrapper">
+
+            <div class="plan-badge">Aktif Plan</div>
+
+            <h1 class="plan-title">
+                <span>@ViewBag.v9</span> Detayları
+            </h1>
+            <p class="plan-subtitle">Mevcut abonelik detaylarınız aşağıda listelenmiştir.</p>
+
+            <!-- PLAN CARD -->
+            <div class="plan-card">
+                <div class="plan-card-header">
+                    <div>
+                        <div class="label">Plan</div>
+                        <div class="value">@ViewBag.v9</div>
+                    </div>
+                    <div class="plan-price-tag">
+                        <div class="amount">@ViewBag.v11</div>
+                        <div class="period">/ aylık</div>
+                    </div>
+                </div>
+
+                <div class="plan-details">
+                    <div class="detail-row">
+                        <div class="detail-label">
+                            <div class="detail-icon">👥</div>
+                            Eş Zamanlı İzleyici
+                        </div>
+                        <div class="detail-value">@ViewBag.v10 Kişi</div>
+                    </div>
+                    <div class="detail-row">
+                        <div class="detail-label">
+                            <div class="detail-icon">🖥️</div>
+                            Video Kalitesi
+                        </div>
+                        <div class="detail-value">@ViewBag.v12</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ACTIONS -->
+            <div class="plan-actions">
+                <a href="/Default/BasicPlanIndex" class="btn-nf-secondary">Basic Plan</a>
+                <a href="/Default/ClassicPlanIndex/" class="btn-nf-secondary">Classic Plan</a>
+                <a href="/Default/UltraPlanIndex/" class="btn-nf-primary">Ultra Plan</a>
+            </div>
+
+        </div>
+    </main>
 
 
-    <a href="/Default/ClassicPlanIndex/" class="btn btn-danger">Classic Plan</a>
-    <a href="/Default/UltraPlanIndex/" class="btn btn-check">Ultra Plan </a>
-
-</div>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
