@@ -1,0 +1,26 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<a href="~/lib/bootstrap/dist/css/bootstrap.css.map">~/lib/bootstrap/dist/css/bootstrap.css.map</a>
+<a href="~/lib/bootstrap/dist/css/bootstrap.min.css.map">~/lib/bootstrap/dist/css/bootstrap.min.css.map</a>
+<a href="~/lib/bootstrap/dist/css/bootstrap.rtl.css.map">~/lib/bootstrap/dist/css/bootstrap.rtl.css.map</a>
+<a href="~/lib/bootstrap/dist/css/bootstrap.rtl.min.css.map">~/lib/bootstrap/dist/css/bootstrap.rtl.min.css.map</a>
+<link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
+<link href="~/lib/bootstrap/dist/css/bootstrap.rtl.min.css" rel="stylesheet" />
+<link href="~/lib/bootstrap/dist/css/bootstrap.rtl.css" rel="stylesheet" />
+<link href="~/lib/bootstrap/dist/css/bootstrap.css" rel="stylesheet" />
+
+<div class="container">
+    <h3>Plan Adı: @ViewBag.v1</h3>
+    <h3>Kişi Sayısı : @ViewBag.v2</h3>
+    <h3>Fiyat : @ViewBag.v3</h3>
+    <h3>Çözünürlük : @ViewBag.v4</h3>
+
+
+    <a href="/Default/ClassicPlanIndex/" class="btn btn-danger">Classic Plan</a>
+    <a href="/Default/UltraPlanIndex/" class="btn btn-check">Ultra Plan </a>
+
+</div>
