@@ -1,0 +1,41 @@
+﻿@model RegisterViewModel
+@{
+	Layout = null;
+
+}
+<a href="~/lib/bootstrap/dist/css/bootstrap.css.map">~/lib/bootstrap/dist/css/bootstrap.css.map</a>
+<a href="~/lib/bootstrap/dist/css/bootstrap.min.css.map">~/lib/bootstrap/dist/css/bootstrap.min.css.map</a>
+<a href="~/lib/bootstrap/dist/css/bootstrap.rtl.css.map">~/lib/bootstrap/dist/css/bootstrap.rtl.css.map</a>
+<a href="~/lib/bootstrap/dist/css/bootstrap.rtl.min.css.map">~/lib/bootstrap/dist/css/bootstrap.rtl.min.css.map</a>
+<link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
+<link href="~/lib/bootstrap/dist/css/bootstrap.rtl.min.css" rel="stylesheet" />
+<link href="~/lib/bootstrap/dist/css/bootstrap.rtl.css" rel="stylesheet" />
+<link href="~/lib/bootstrap/dist/css/bootstrap.css" rel="stylesheet" />
+
+<div class="container">
+
+
+	<label>Adınız</label>
+	<input type="text" asp-for="Name" class="form-control" />
+	<br />
+
+	<label>Soyadınız</label>
+	<input type="text" asp-for="Surname" class="form-control" />
+	<br />
+
+	<label>Kullanıcı Adınız</label>
+	<input type="text" asp-for="Username" class="form-control" />
+	<br />
+
+	<label>Email</label>
+	<input type="email" asp-for="Email" class="form-control" />
+	<br />
+
+	<label>Şifreniz</label>
+	<input type="password" asp-for="Password" class="form-control" />
+	<br />
+
+	<button class="btn btn-warning">Kayıt Ol</button>
+
+</div>
+
