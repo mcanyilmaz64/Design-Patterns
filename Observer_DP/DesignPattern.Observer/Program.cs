@@ -1,4 +1,5 @@
 using DesignPattern.Observer.DAL;
+using DesignPattern.Observer.ObserverDp;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -6,6 +7,16 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<Context>();
 builder.Services.AddIdentity<AppUser, AppRole>().AddEntityFrameworkStores<Context>();
+
+builder.Services.AddScoped<ObserverObject>(sp =>
+{
+    ObserverObject observerObject = new ObserverObject();
+    observerObject.RegisterObserver(new CreateWelcomeMessage(sp));
+    observerObject.RegisterObserver(new CreateMagazineAnnocuncement(sp));
+    observerObject.RegisterObserver(new CreateDiscountCode(sp));
+    return observerObject;
+
+});
 
 var app = builder.Build();
 

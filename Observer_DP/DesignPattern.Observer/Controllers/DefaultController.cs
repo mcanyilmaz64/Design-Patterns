@@ -1,5 +1,6 @@
 ﻿using DesignPattern.Observer.DAL;
 using DesignPattern.Observer.Models;
+using DesignPattern.Observer.ObserverDp;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,13 +9,15 @@ namespace DesignPattern.Observer.Controllers
     public class DefaultController : Controller
     {
         private readonly UserManager<AppUser> _userManager;
+        private readonly ObserverObject observerObject;
 
-        public DefaultController(UserManager<AppUser> userManager)
-        {
-            _userManager = userManager;
-        }
+		public DefaultController(UserManager<AppUser> userManager, ObserverObject observerObject)
+		{
+			_userManager = userManager;
+			this.observerObject = observerObject;
+		}
 
-        [HttpGet]
+		[HttpGet]
         public IActionResult Index()
         {
             return View();
@@ -31,7 +34,14 @@ namespace DesignPattern.Observer.Controllers
                 Email = model.Email,
                 
             };  
-            await _userManager.CreateAsync(appUser, model.Password);
+            var result = await _userManager.CreateAsync(appUser, model.Password);
+            if (result.Succeeded)
+			{
+				observerObject.NotifyObservers(appUser);
+
+                return View();
+			}
+
             return View();
           
         }
