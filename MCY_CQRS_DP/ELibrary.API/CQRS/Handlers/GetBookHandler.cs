@@ -19,6 +19,7 @@ namespace ELibrary.API.CQRS.Handlers
 		{
 			var result = await _context.Books.Select(b => new BookResult
 			{
+				BookId = b.BookId,
 				BookName = b.BookName,
 				CategoryId = b.CategoryId,
 				Price = b.Price,

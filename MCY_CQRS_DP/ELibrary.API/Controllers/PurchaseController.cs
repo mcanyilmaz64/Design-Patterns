@@ -17,7 +17,7 @@ namespace ELibrary.API.Controllers
 		}
 
 		[HttpPost]
-		public async Task<IActionResult> CreatePurchase([FromBody] CreateBookCommand command)
+		public async Task<IActionResult> CreatePurchase([FromBody] CreatePurchaseCommand command)
 		{
 			var result = await _mediator.Send(command);
 			return Ok(result);
