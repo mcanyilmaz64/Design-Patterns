@@ -4,15 +4,16 @@ namespace DesignPattern.Observer.ObserverDp
 {
     public class CreateWelcomeMessage : IObserver
     {
-        Context context = new Context();
+        private readonly Context context;
         private readonly IServiceProvider _serviceProvider;
 
-        public CreateWelcomeMessage(IServiceProvider serviceProvider)
-        {
-            _serviceProvider = serviceProvider;
-        }
+		public CreateWelcomeMessage(IServiceProvider serviceProvider, Context context)
+		{
+			_serviceProvider = serviceProvider;
+			this.context = context;
+		}
 
-        public void CreateNewUser(AppUser appUser)
+		public void CreateNewUser(AppUser appUser)
         {
             context.WelcomeMessages.Add(new WelcomeMessage
             {

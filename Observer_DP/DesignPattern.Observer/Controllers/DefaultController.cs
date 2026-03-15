@@ -39,11 +39,16 @@ namespace DesignPattern.Observer.Controllers
 			{
 				observerObject.NotifyObservers(appUser);
 
-                return View();
-			}
+                return RedirectToAction("Welcome", new { name = appUser.Name });
+            }
 
             return View();
           
+        }
+        [HttpGet]
+        public IActionResult Welcome(string name)
+        {
+            return View((object)name);
         }
     }
 }

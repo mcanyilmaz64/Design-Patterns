@@ -1,0 +1,476 @@
+﻿@model string
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Observer Pattern — Welcome</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Poppins:wght@300;400;500;600&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: #000;
+            overflow: hidden;
+        }
+
+        #particles-js {
+            position: absolute;
+            width: 100%; height: 100%;
+            z-index: 1;
+        }
+
+        .container {
+            position: relative;
+            z-index: 10;
+            width: 100%;
+            max-width: 580px;
+            padding: 24px;
+            max-height: 100vh;
+            overflow-y: auto;
+            scrollbar-width: none;
+        }
+        .container::-webkit-scrollbar { display: none; }
+
+        .form-box {
+            background: rgba(0,0,0,0.78);
+            border-radius: 24px;
+            padding: 40px;
+            border: 1px solid rgba(0,212,255,0.3);
+            box-shadow: 0 8px 32px rgba(0,212,255,0.3), inset 0 0 20px rgba(0,212,255,0.07);
+            animation: formEntrance 1.2s cubic-bezier(0.68,-0.55,0.27,1.55) forwards;
+            opacity: 0;
+            transform: translateY(60px);
+        }
+
+        @@keyframes formEntrance {
+            0%   { opacity:0; transform: translateY(60px); }
+            60%  { opacity:1; }
+            100% { opacity:1; transform: translateY(0); }
+        }
+
+        h2 {
+            color: #00d4ff;
+            text-align: center;
+            font-family: 'Cinzel', serif;
+            font-weight: 700;
+            letter-spacing: 3px;
+            font-size: 20px;
+            animation: glow 2s infinite alternate;
+            margin-bottom: 6px;
+        }
+
+        @@keyframes glow {
+            from { text-shadow: 0 0 5px rgba(0,212,255,0.4); }
+            to   { text-shadow: 0 0 18px rgba(0,212,255,0.9); }
+        }
+
+        .subtitle {
+            color: rgba(0,212,255,0.55);
+            text-align: center;
+            font-size: 11px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+
+        .welcome-name {
+            color: #fff;
+            text-align: center;
+            font-size: 14px;
+            margin-bottom: 28px;
+            letter-spacing: 1px;
+        }
+        .welcome-name span { color: #00d4ff; font-weight: 600; }
+
+        .flow-label {
+            font-size: 10px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: rgba(0,212,255,0.4);
+            text-align: center;
+            margin-bottom: 16px;
+        }
+
+        /* Subject */
+        .subject {
+            background: rgba(0,212,255,0.08);
+            border: 1px solid rgba(0,212,255,0.4);
+            border-radius: 12px;
+            padding: 14px 18px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            opacity: 0;
+            animation: nodeIn 0.5s 0.8s forwards;
+        }
+
+        .subject-icon {
+            width: 36px; height: 36px;
+            border-radius: 50%;
+            background: rgba(0,212,255,0.15);
+            border: 1px solid rgba(0,212,255,0.5);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 16px; flex-shrink: 0;
+        }
+
+        .subject-info .tag {
+            font-size: 9px; letter-spacing: 2px;
+            text-transform: uppercase; color: rgba(0,212,255,0.5);
+        }
+
+        .subject-info .name {
+            font-size: 12px; color: #00d4ff; font-weight: 500;
+            font-family: 'Fira Code', monospace;
+        }
+
+        /* Notify row */
+        .notify-row {
+            display: flex; align-items: center;
+            justify-content: center; gap: 10px;
+            padding: 8px 0; opacity: 0;
+            animation: nodeIn 0.4s 1.2s forwards;
+        }
+
+        .notify-text {
+            font-size: 10px; letter-spacing: 2px;
+            text-transform: uppercase; color: rgba(0,212,255,0.45);
+        }
+
+        .pulse-line {
+            flex: 1; height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(0,212,255,0.5), transparent);
+            position: relative; overflow: hidden;
+        }
+
+        .pulse-line::after {
+            content: '';
+            position: absolute; top: -1px; left: -100%;
+            width: 60%; height: 3px;
+            background: linear-gradient(90deg, transparent, #00d4ff, transparent);
+            animation: pulse 1.5s 1.4s infinite ease-in-out;
+        }
+
+        @@keyframes pulse {
+            0%   { left: -60%; }
+            100% { left: 140%; }
+        }
+
+        /* Observer cards */
+        .observers { display: flex; flex-direction: column; gap: 10px; }
+
+        .observer-card {
+            border: 1px solid rgba(0,212,255,0.2);
+            border-radius: 12px;
+            overflow: hidden;
+            opacity: 0;
+            transform: translateX(-20px);
+            cursor: pointer;
+        }
+
+        .observer-card:nth-child(1) { animation: cardIn 0.5s 1.5s forwards; }
+        .observer-card:nth-child(2) { animation: cardIn 0.5s 1.8s forwards; }
+        .observer-card:nth-child(3) { animation: cardIn 0.5s 2.1s forwards; }
+
+        @@keyframes cardIn {
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .card-header {
+            background: rgba(0,0,0,0.5);
+            padding: 14px 18px;
+            display: flex; align-items: center; gap: 14px;
+            position: relative;
+            transition: background 0.3s;
+        }
+
+        .card-header:hover { background: rgba(0,212,255,0.07); }
+
+        .observer-card.open .card-header {
+            background: rgba(0,212,255,0.08);
+            border-bottom: 1px solid rgba(0,212,255,0.15);
+        }
+
+        .card-header::before {
+            content: '';
+            position: absolute; left: 0; top: 0;
+            width: 3px; height: 100%;
+            background: #00d4ff;
+            box-shadow: 0 0 8px rgba(0,212,255,0.8);
+        }
+
+        .card-icon {
+            width: 36px; height: 36px;
+            border-radius: 10px;
+            background: rgba(0,212,255,0.1);
+            border: 1px solid rgba(0,212,255,0.3);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 17px; flex-shrink: 0;
+        }
+
+        .card-info .card-tag {
+            font-size: 9px; letter-spacing: 2px;
+            text-transform: uppercase; color: rgba(0,212,255,0.45);
+        }
+
+        .card-info .card-name {
+            font-size: 13px; color: #fff; font-weight: 500; margin: 1px 0;
+        }
+
+        .card-info .card-desc {
+            font-size: 11px; color: rgba(255,255,255,0.4);
+        }
+
+        .card-status {
+            margin-left: auto;
+            font-size: 9px; letter-spacing: 1px;
+            text-transform: uppercase; color: #00d4ff;
+            border: 1px solid rgba(0,212,255,0.3);
+            padding: 3px 10px; border-radius: 20px;
+            white-space: nowrap; flex-shrink: 0;
+        }
+
+        .card-arrow {
+            margin-left: 10px;
+            color: rgba(0,212,255,0.5);
+            font-size: 11px;
+            transition: transform 0.3s;
+            flex-shrink: 0;
+        }
+
+        .observer-card.open .card-arrow { transform: rotate(180deg); }
+
+        /* Snippet panel */
+        .card-snippet {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease;
+            background: rgba(0,0,0,0.6);
+        }
+
+        .observer-card.open .card-snippet { max-height: 200px; }
+
+        .snippet-inner {
+            padding: 16px 20px;
+        }
+
+        .snippet-label {
+            font-size: 9px; letter-spacing: 2px;
+            text-transform: uppercase; color: rgba(0,212,255,0.4);
+            margin-bottom: 10px;
+        }
+
+        /* Message / Discount / Announcement box */
+        .info-box {
+            background: rgba(0,212,255,0.05);
+            border: 1px solid rgba(0,212,255,0.15);
+            border-radius: 8px;
+            padding: 14px 16px;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+        .info-box-icon {
+            font-size: 20px;
+            flex-shrink: 0;
+            margin-top: 1px;
+        }
+
+        .info-box-content .info-title {
+            font-size: 11px;
+            color: rgba(0,212,255,0.6);
+            letter-spacing: 1px;
+            margin-bottom: 4px;
+        }
+
+        .info-box-content .info-text {
+            font-size: 13px;
+            color: rgba(255,255,255,0.85);
+            line-height: 1.5;
+        }
+
+        .discount-code {
+            display: inline-block;
+            font-family: 'Fira Code', monospace;
+            font-size: 18px;
+            font-weight: 600;
+            color: #00d4ff;
+            letter-spacing: 4px;
+            margin-top: 4px;
+            text-shadow: 0 0 10px rgba(0,212,255,0.6);
+        }
+
+        .discount-amount {
+            font-size: 11px;
+            color: rgba(255,255,255,0.4);
+            margin-top: 2px;
+        }
+
+        @@keyframes nodeIn { to { opacity: 1; } }
+
+        .badge {
+            display: flex; justify-content: center;
+            margin-top: 24px; opacity: 0;
+            animation: nodeIn 0.5s 2.5s forwards;
+        }
+
+        .badge span {
+            font-size: 10px; letter-spacing: 2px;
+            color: rgba(0,212,255,0.3); text-transform: uppercase;
+            border: 1px solid rgba(0,212,255,0.12);
+            padding: 4px 16px; border-radius: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<div id="particles-js"></div>
+
+<div class="container">
+    <div class="form-box">
+        <h2>OBSERVER PATTERN</h2>
+        <p class="subtitle">Event Flow — Design Pattern Demo</p>
+        <p class="welcome-name">Hoş geldin, <span>@Model</span> 👋</p>
+
+        <p class="flow-label">▸ NotifyObservers() tetiklendi</p>
+
+        <!-- Subject -->
+        <div class="subject">
+            <div class="subject-icon">👤</div>
+            <div class="subject-info">
+                <div class="tag">Subject / Observable</div>
+                <div class="name">observerObject.NotifyObservers(appUser)</div>
+            </div>
+        </div>
+
+        <!-- Notify arrow -->
+        <div class="notify-row">
+            <div class="pulse-line"></div>
+            <div class="notify-text">notify</div>
+            <div class="pulse-line"></div>
+        </div>
+
+        <!-- Observers -->
+        <div class="observers">
+
+            <!-- Card 1 — Welcome Message -->
+            <div class="observer-card" onclick="toggle(this)">
+                <div class="card-header">
+                    <div class="card-icon">✉️</div>
+                    <div class="card-info">
+                        <div class="card-tag">Observer #1</div>
+                        <div class="card-name">CreateWelcomeMessage</div>
+                        <div class="card-desc">WelcomeMessages tablosuna kayıt eklendi</div>
+                    </div>
+                    <div class="card-status">✓ executed</div>
+                    <div class="card-arrow">▼</div>
+                </div>
+                <div class="card-snippet">
+                    <div class="snippet-inner">
+                        <div class="snippet-label">▸ Gönderilen mesaj</div>
+                        <div class="info-box">
+                            <div class="info-box-icon">💬</div>
+                            <div class="info-box-content">
+                                <div class="info-title">Welcome Message</div>
+                                <div class="info-text">Welcome to our system</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 2 — Discount Code -->
+            <div class="observer-card" onclick="toggle(this)">
+                <div class="card-header">
+                    <div class="card-icon">🏷️</div>
+                    <div class="card-info">
+                        <div class="card-tag">Observer #2</div>
+                        <div class="card-name">CreateDiscountCode</div>
+                        <div class="card-desc">Discounts tablosuna indirim kodu eklendi</div>
+                    </div>
+                    <div class="card-status">✓ executed</div>
+                    <div class="card-arrow">▼</div>
+                </div>
+                <div class="card-snippet">
+                    <div class="snippet-inner">
+                        <div class="snippet-label">▸ İndirim kodun</div>
+                        <div class="info-box">
+                            <div class="info-box-icon">🎁</div>
+                            <div class="info-box-content">
+                                <div class="info-title">Discount Code</div>
+                                <div class="discount-code">APRIL14</div>
+                                <div class="discount-amount">%30 indirim · Tüm ürünlerde geçerli</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 3 — Magazine Announcement -->
+            <div class="observer-card" onclick="toggle(this)">
+                <div class="card-header">
+                    <div class="card-icon">📰</div>
+                    <div class="card-info">
+                        <div class="card-tag">Observer #3</div>
+                        <div class="card-name">CreateMagazineAnnouncement</div>
+                        <div class="card-desc">UserProcesses tablosuna duyuru eklendi</div>
+                    </div>
+                    <div class="card-status">✓ executed</div>
+                    <div class="card-arrow">▼</div>
+                </div>
+                <div class="card-snippet">
+                    <div class="snippet-inner">
+                        <div class="snippet-label">▸ Duyuru içeriği</div>
+                        <div class="info-box">
+                            <div class="info-box-icon">📖</div>
+                            <div class="info-box-content">
+                                <div class="info-title">Bilim Dergisi</div>
+                                <div class="info-text">Bilim dergimizin 3. sayısı 14 Nisanda sizlere ulaşacaktır.</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="badge">
+            <span>Observer Pattern — Mahmut Can Yılmaz</span>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+<script>
+    function toggle(card) {
+        card.classList.toggle('open');
+    }
+
+    particlesJS('particles-js', {
+        particles: {
+            number: { value: 80, density: { enable: true, value_area: 800 } },
+            color: { value: "#00d4ff" },
+            shape: { type: "circle" },
+            opacity: { value: 0.6, random: true, anim: { enable: true, speed: 1, opacity_min: 0.2, sync: false } },
+            size: { value: 3, random: true },
+            line_linked: { enable: true, distance: 140, color: "#00d4ff", opacity: 0.4, width: 1 },
+            move: { enable: true, speed: 1.5, random: true, out_mode: "out" }
+        },
+        interactivity: {
+            detect_on: "canvas",
+            events: { onhover: { enable: true, mode: "repulse" }, onclick: { enable: true, mode: "push" }, resize: true },
+            modes: { repulse: { distance: 80 }, push: { particles_nb: 3 } }
+        },
+        retina_detect: true
+    });
+</script>
+</body>
+</html>

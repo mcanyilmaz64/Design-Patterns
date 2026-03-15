@@ -6,14 +6,15 @@ namespace DesignPattern.Observer.ObserverDp
     public class CreateDiscountCode : IObserver
     {
 
-        Context context = new Context();
+        private readonly Context context ;
         private readonly IServiceProvider _serviceProvider;
 
-        public CreateDiscountCode(IServiceProvider serviceProvider)
-        {
-            _serviceProvider = serviceProvider;
-        }
-        public void CreateNewUser(AppUser appUser)
+		public CreateDiscountCode(IServiceProvider serviceProvider, Context context)
+		{
+			_serviceProvider = serviceProvider;
+			this.context = context;
+		}
+		public void CreateNewUser(AppUser appUser)
         {
             context.Discounts.Add(new Discount
             {

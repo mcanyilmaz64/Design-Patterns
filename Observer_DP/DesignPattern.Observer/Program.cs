@@ -11,10 +11,10 @@ builder.Services.AddIdentity<AppUser, AppRole>().AddEntityFrameworkStores<Contex
 builder.Services.AddScoped<ObserverObject>(sp =>
 {
     ObserverObject observerObject = new ObserverObject();
-    observerObject.RegisterObserver(new CreateWelcomeMessage(sp));
-    observerObject.RegisterObserver(new CreateMagazineAnnocuncement(sp));
-    observerObject.RegisterObserver(new CreateDiscountCode(sp));
-    return observerObject;
+	observerObject.RegisterObserver(new CreateWelcomeMessage(sp, sp.GetRequiredService<Context>()));
+	observerObject.RegisterObserver(new CreateMagazineAnnocuncement(sp, sp.GetRequiredService<Context>()));
+	observerObject.RegisterObserver(new CreateDiscountCode(sp, sp.GetRequiredService<Context>()));
+	return observerObject;
 
 });
 

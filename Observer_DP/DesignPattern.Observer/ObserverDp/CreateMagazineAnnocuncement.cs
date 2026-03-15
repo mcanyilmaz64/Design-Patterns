@@ -5,14 +5,15 @@ namespace DesignPattern.Observer.ObserverDp
     public class CreateMagazineAnnocuncement : IObserver
     {
 
-        Context context = new Context();
         private readonly IServiceProvider _serviceProvider;
+        private readonly Context context;
 
-        public CreateMagazineAnnocuncement(IServiceProvider serviceProvider)
-        {
-            _serviceProvider = serviceProvider;
-        }
-        public void CreateNewUser(AppUser appUser)
+		public CreateMagazineAnnocuncement(IServiceProvider serviceProvider, Context context)
+		{
+			_serviceProvider = serviceProvider;
+			this.context = context;
+		}
+		public void CreateNewUser(AppUser appUser)
         {
             context.UserProcesses.Add(new UserProcess
             {
