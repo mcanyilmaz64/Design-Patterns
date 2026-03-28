@@ -1,4 +1,8 @@
+using DesignPattern.Repository.Business.Abstract;
+using DesignPattern.Repository.Business.Concrete;
+using DesignPattern.Repository.DataAccess.Abstract;
 using DesignPattern.Repository.DataAccess.Concrete;
+using DesignPattern.Repository.DataAccess.EntityFramework;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -8,6 +12,10 @@ builder.Services.AddControllersWithViews();
 
 builder.Services.AddEntityFrameworkNpgsql().AddDbContext<Context>(options =>
         options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+builder.Services.AddScoped<ICategoryService, CategoryManager>();
+builder.Services.AddScoped<IProductService, ProductManager>();
+builder.Services.AddScoped<ICategoryDal, EfCategoryDal>();
+builder.Services.AddScoped<IProductDal, EfProductDal>();
 
 
 var app = builder.Build();
