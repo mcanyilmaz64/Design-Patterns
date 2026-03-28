@@ -33,6 +33,7 @@ function App() {
 
   return (
     <div className='container'>
+      <br />
       <table className='table table-striped'>
         <thead className='table-dark'>
           <tr>
