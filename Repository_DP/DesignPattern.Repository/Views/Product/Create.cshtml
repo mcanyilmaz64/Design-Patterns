@@ -22,8 +22,10 @@
                     <input asp-for="Price" class="form-control" />
                 </div>
                 <div class="mb-3">
-                    <label asp-for="CategoryId" class="form-label">Category ID</label>
-                    <input asp-for="CategoryId" class="form-control" />
+                    <label asp-for="CategoryId" class="form-label">Category</label>
+                    <select asp-for="CategoryId" asp-items="@ViewBag.v" class="form-select">
+                        <option value="">-- Select Category --</option>
+                    </select>
                 </div>
                 <button type="submit" class="btn btn-primary">Save</button>
                 <a asp-action="Index" class="btn btn-secondary">Cancel</a>
